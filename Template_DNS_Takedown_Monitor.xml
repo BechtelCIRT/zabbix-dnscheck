@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2020-06-04T14:44:11Z</date>
+    <groups>
+        <group>
+            <name>Monitored Takedowns</name>
+        </group>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template DNS Abuse Monitor</template>
+            <name>Template DNS Abuse Monitor</name>
+            <description>Monitor established domains for takedown action. Alerts on uptime</description>
+            <groups>
+                <group>
+                    <name>Monitored Takedowns</name>
+                </group>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>DNS Check</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>DNS Check Discovery</name>
+                    <type>EXTERNAL</type>
+                    <key>dnscheck-gather-lld.py[get,{HOST.DNS},{HOST.HOST},ptrYES,ipv6YES,mxYES,txtYES]</key>
+                    <delay>14400</delay>
+                    <lifetime>5d</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>IPv4 on {#HOSTNAME}: #{#IPV4NUM}</name>
+                            <type>TRAP</type>
+                            <key>dnscheck.ipv4[{#IPV4NUM}]</key>
+                            <delay>0</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>DNS Check</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{str(NOIPV4)}=0 and {str(TIMEOUT)}=0</expression>
+                                    <name>{#HOSTNAME}: IPv4 #{#IPV4NUM} has an A record</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{diff(0)}&gt;0 and {str(TIMEOUT,#2)}=0 and {str(NODNS,#2)}=0</expression>
+                                    <name>{#HOSTNAME}: IPv4 #{#IPV4NUM} has changed</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(NOIPV4)}=1</expression>
+                                    <name>{#HOSTNAME}: IPv4 #{#IPV4NUM} have no A record</name>
+                                    <status>DISABLED</status>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(TIMEOUT,#2)}=1</expression>
+                                    <name>{#HOSTNAME}: main DNS forward query has timed out</name>
+                                    <priority>INFO</priority>
+                                    <description>Applies to IPv4, IPv6 and MX.</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(NODNS)}=1</expression>
+                                    <name>{#HOSTNAME}: Needs DNS name set in Zabbix host profile</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>IPv6 on {#HOSTNAME}: #{#IPV6NUM}</name>
+                            <type>TRAP</type>
+                            <key>dnscheck.ipv6[{#IPV6NUM}]</key>
+                            <delay>0</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>DNS Check</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{str(NOIPV6)}=0 and {str(TIMEOUT)}=0</expression>
+                                    <name>{#HOSTNAME}: IPv6 #{#IPV6NUM} has an AAAA record</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{diff(0)}&gt;0 and {str(TIMEOUT,#2)}=0</expression>
+                                    <name>{#HOSTNAME}: IPv6 #{#IPV6NUM} has changed</name>
+                                    <priority>HIGH</priority>
+                                    <description>If value was changed but not to or from 'TIMEOUT'</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(NOIPV6)}=1</expression>
+                                    <name>{#HOSTNAME}: IPv6 #{#IPV6NUM} have no AAAA record</name>
+                                    <status>DISABLED</status>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>MX priority on {#HOSTNAME}: #{#MXPRINUM}</name>
+                            <type>TRAP</type>
+                            <key>dnscheck.mxpri[{#MXPRINUM}]</key>
+                            <delay>0</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>DNS Check</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{diff(0)}&gt;0</expression>
+                                    <name>{#HOSTNAME}: MX priority on #{#MXPRINUM} has changed</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>MX on {#HOSTNAME}: #{#MXNUM}</name>
+                            <type>TRAP</type>
+                            <key>dnscheck.mx[{#MXNUM}]</key>
+                            <delay>0</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>DNS Check</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{diff(0)}&gt;0 and {str(TIMEOUT,#2)}=0</expression>
+                                    <name>{#HOSTNAME}: MX #{#MXNUM} has changed</name>
+                                    <priority>HIGH</priority>
+                                    <description>If value was changed but not to or from 'TIMEOUT'</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(NOMX)}=1</expression>
+                                    <name>{#HOSTNAME}: MX records are not present</name>
+                                    <status>DISABLED</status>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(NOMX)}=0 and {str(TIMEOUT)}=0</expression>
+                                    <name>{#HOSTNAME}: MX records are present</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>PTR for IPv4 on {#HOSTNAME}: #{#PTR4NUM}</name>
+                            <type>TRAP</type>
+                            <key>dnscheck.ptr4[{#PTR4NUM}]</key>
+                            <delay>0</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>DNS Check</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{str(NOPTR)}=0 and {str(TIMEOUT)}=0</expression>
+                                    <name>{#HOSTNAME}: IPv4 #{#PTR4NUM} has a PTR record</name>
+                                    <status>DISABLED</status>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(MULTIPTR)}=1</expression>
+                                    <name>{#HOSTNAME}: IPv4 #{#PTR4NUM} have more than one PTR record</name>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(NOPTR)}=1</expression>
+                                    <name>{#HOSTNAME}: IPv4 #{#PTR4NUM} have no PTR record</name>
+                                    <status>DISABLED</status>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{diff(0)}&gt;0 and {str(TIMEOUT,#2)}=0</expression>
+                                    <name>{#HOSTNAME}: IPv4 #{#PTR4NUM} PTR has changed</name>
+                                    <priority>WARNING</priority>
+                                    <description>TIMEOUT, NOPTR and MULTIPTR will also trigger this.</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(TIMEOUT,#2)}=1</expression>
+                                    <name>{#HOSTNAME}: IPv4 #{#PTR4NUM} recursive query has timed out</name>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>PTR for IPv6 on {#HOSTNAME}: #{#PTR6NUM}</name>
+                            <type>TRAP</type>
+                            <key>dnscheck.ptr6[{#PTR6NUM}]</key>
+                            <delay>0</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>DNS Check</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{str(NOPTR)}=0 and {str(TIMEOUT)}=0</expression>
+                                    <name>{#HOSTNAME}: IPv6 #{#PTR6NUM} has a PTR record</name>
+                                    <status>DISABLED</status>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(MULTIPTR)}=1</expression>
+                                    <name>{#HOSTNAME}: IPv6 #{#PTR6NUM} have more than one PTR record</name>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(NOPTR)}=1</expression>
+                                    <name>{#HOSTNAME}: IPv6 #{#PTR6NUM} have no PTR record</name>
+                                    <status>DISABLED</status>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{diff(0)}&gt;0 and {str(TIMEOUT,#2)}=0</expression>
+                                    <name>{#HOSTNAME}: IPv6 #{#PTR6NUM} PTR has changed</name>
+                                    <priority>WARNING</priority>
+                                    <description>TIMEOUT, NOPTR and MULTIPTR will also trigger this.</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(TIMEOUT,#2)}=1</expression>
+                                    <name>{#HOSTNAME}: IPv6 #{#PTR6NUM} recursive query has timed out</name>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>TXT on {#HOSTNAME}: #{#TXTNUM}</name>
+                            <type>TRAP</type>
+                            <key>dnscheck.txt[{#TXTNUM}]</key>
+                            <delay>0</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>DNS Check</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{diff(0)}&gt;0 and {str(TIMEOUT,#2)}=0</expression>
+                                    <name>{#HOSTNAME}: TXT #{#TXTNUM} has changed</name>
+                                    <priority>HIGH</priority>
+                                    <description>If value was changed but not to or from 'TIMEOUT'</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(TIMEOUT,#2)}=1</expression>
+                                    <name>{#HOSTNAME}: TXT DNS forward query has timed out</name>
+                                    <priority>INFO</priority>
+                                    <description>Applies to TXT.</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(NOTXT)}=1</expression>
+                                    <name>{#HOSTNAME}: TXT records are not present</name>
+                                    <status>DISABLED</status>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{str(NOTXT)}=0 and {str(TIMEOUT)}=0</expression>
+                                    <name>{#HOSTNAME}: TXT records are present</name>
+                                    <priority>AVERAGE</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+            <tags>
+                <tag>
+                    <tag>monitor</tag>
+                    <value>takedown</value>
+                </tag>
+            </tags>
+        </template>
+    </templates>
+</zabbix_export>

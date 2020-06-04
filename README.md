@@ -26,7 +26,7 @@ It is possible to control what data is gathered by providing arguments to the di
 ## Installation
 Requires `python3`, `zabbix-sender`, `bind9-host` (Debian) or `bind-utils` (Centos) packages. Uses `host` binary.<br />
 
-Take a look at script's first lines and change values if necessary. Its important to specify `serverIP` (server or proxy) in `dnscheck-send.py`.
+Take a look at script's first lines and change values if necessary. Its important to specify `serverIP` (server or proxy) in `dnscheck-send.py`. Since the external check script is executed by the Zabbix Server or Proxy, and zabbix_send is on board that host, using a ServerIP of `127.0.0.1` should work most of the time. You only need to change it if using on an external server and manually executing the script with the support of a locally installed zabbix_send to send data back to a remote server/proxy. 
 
 Place scripts in `externalscripts` directory on your server or proxy.
 ```bash
@@ -35,10 +35,8 @@ mv dnscheck-gather-lld.py dnscheck-send.py /usr/lib/zabbix/externalscripts/
 
 Apply necessary permissions.
 ```bash
-chmod 750 dnscheck-gather-lld.py
-chown root:zabbix dnscheck-gather-lld.py
-chmod 750 dnscheck-send.py
-chown root:zabbix dnscheck-send.py
+chmod 755 dnscheck-gather-lld.py
+chmod 755 dnscheck-send.py
 ```
 
 Import required templates in zabbix web interface. Then assign hosts and wait. 
@@ -65,7 +63,10 @@ Verbosely process host `Example mail server` with dns `mail.example.org` gatheri
 <br /><br />
 
 These scripts were tested to work with following configurations:
-- Centos 7 / Zabbix 2.4 / Python 3.4
+- Ubuntu Bionic / Zabbix 5.0 / Python 3.6
+
+## Monitoring DNS impersonation
+A template `Template_DNS_Takedown_Monitor.xml` was added to reconfigure the trigger checks for a domain change-monitor perspective. This is useful for monitoring changes in resolution behavior.
 
 ## Links
 - http://unlicense.org

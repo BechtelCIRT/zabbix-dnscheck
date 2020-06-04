@@ -2,7 +2,7 @@
 
 senderPath = r'zabbix_sender'
 #senderPath = r'/usr/local/bin/zabbix_sender'   # if zabbix sender isn't in PATH
-serverIP = '192.0.2.2'
+serverIP = '127.0.0.1'
 timeout = 60   # how long the script must wait between LLD and sending, increase if data received late
 
 ## End of configuration ##
