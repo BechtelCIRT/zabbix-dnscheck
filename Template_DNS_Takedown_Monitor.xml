@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-    <version>4.4</version>
-    <date>2020-06-04T14:44:11Z</date>
+    <version>5.0</version>
+    <date>2020-06-22T15:59:54Z</date>
     <groups>
         <group>
             <name>Monitored Takedowns</name>
@@ -34,13 +34,14 @@
                     <type>EXTERNAL</type>
                     <key>dnscheck-gather-lld.py[get,{HOST.DNS},{HOST.HOST},ptrYES,ipv6YES,mxYES,txtYES]</key>
                     <delay>14400</delay>
-                    <lifetime>5d</lifetime>
+                    <lifetime>365d</lifetime>
                     <item_prototypes>
                         <item_prototype>
                             <name>IPv4 on {#HOSTNAME}: #{#IPV4NUM}</name>
                             <type>TRAP</type>
                             <key>dnscheck.ipv4[{#IPV4NUM}]</key>
                             <delay>0</delay>
+                            <history>365d</history>
                             <trends>0</trends>
                             <value_type>TEXT</value_type>
                             <applications>
@@ -83,6 +84,7 @@
                             <type>TRAP</type>
                             <key>dnscheck.ipv6[{#IPV6NUM}]</key>
                             <delay>0</delay>
+                            <history>365d</history>
                             <trends>0</trends>
                             <value_type>TEXT</value_type>
                             <applications>
@@ -115,6 +117,7 @@
                             <type>TRAP</type>
                             <key>dnscheck.mxpri[{#MXPRINUM}]</key>
                             <delay>0</delay>
+                            <history>365d</history>
                             <trends>0</trends>
                             <value_type>TEXT</value_type>
                             <applications>
@@ -135,6 +138,7 @@
                             <type>TRAP</type>
                             <key>dnscheck.mx[{#MXNUM}]</key>
                             <delay>0</delay>
+                            <history>365d</history>
                             <trends>0</trends>
                             <value_type>TEXT</value_type>
                             <applications>
@@ -167,6 +171,7 @@
                             <type>TRAP</type>
                             <key>dnscheck.ptr4[{#PTR4NUM}]</key>
                             <delay>0</delay>
+                            <history>365d</history>
                             <trends>0</trends>
                             <value_type>TEXT</value_type>
                             <applications>
@@ -210,6 +215,7 @@
                             <type>TRAP</type>
                             <key>dnscheck.ptr6[{#PTR6NUM}]</key>
                             <delay>0</delay>
+                            <history>365d</history>
                             <trends>0</trends>
                             <value_type>TEXT</value_type>
                             <applications>
@@ -253,6 +259,7 @@
                             <type>TRAP</type>
                             <key>dnscheck.txt[{#TXTNUM}]</key>
                             <delay>0</delay>
+                            <history>365d</history>
                             <trends>0</trends>
                             <value_type>TEXT</value_type>
                             <applications>
